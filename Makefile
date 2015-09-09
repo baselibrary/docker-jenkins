@@ -1,6 +1,6 @@
 NAME = quay.io/baselibrary/jenkins
 REPO = git@github.com:baselibrary/docker-jenkins.git
-TAGS = 1.626
+TAGS = 1.626 1.627
 
 all: build
 
