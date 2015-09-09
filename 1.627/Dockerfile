@@ -11,7 +11,7 @@ RUN \
 ## Install app
 RUN \
   apt-get update &&\
-  apt-get install -y git unzip jenkins=1.626 &&\
+  apt-get install -y git unzip jenkins=1.627 &&\
   unzip -qqc /usr/share/jenkins/jenkins.war WEB-INF/jenkins-cli.jar > /var/lib/jenkins/jenkins-cli.jar &&\
   rm -rf /var/lib/apt/lists/*
 
