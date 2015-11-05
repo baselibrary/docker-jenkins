@@ -1,20 +1,23 @@
-NAME = quay.io/baselibrary/jenkins
-REPO = git@github.com:baselibrary/docker-jenkins.git
-TAGS = 1.626 1.627
+NAME     = baselibrary/jenkins
+REPO     = git@github.com:baselibrary/docker-jenkins.git
+VERSIONS = $(foreach df,$(wildcard */Dockerfile),$(df:%/Dockerfile=%))
 
 all: build
 
-build: $(TAGS)
+build: $(VERSIONS)
 
-release: $(TAGS)
+release: $(VERSIONS)
 	docker push ${NAME}
 
-sync-branches:
-	git fetch $(REPO) master
-	@$(foreach tag, $(TAGS), git branch -f $(tag) FETCH_HEAD;)
-	@$(foreach tag, $(TAGS), git push $(REPO) $(tag);)
-	@$(foreach tag, $(TAGS), git branch -D $(tag);)
+update:
+	docker run --rm -v $$(pwd):/work -w /work buildpack-deps ./update.sh
 
-.PHONY: $(TAGS)
-$(TAGS):
-	docker build -t $(NAME):$@ $@
+branches:
+	git fetch $(REPO) master
+	@$(foreach tag, $(VERSIONS), git branch -f $(tag) FETCH_HEAD;)
+	@$(foreach tag, $(VERSIONS), git push $(REPO) $(tag);)
+	@$(foreach tag, $(VERSIONS), git branch -D $(tag);)
+
+.PHONY: all build library $(VERSIONS)
+$(VERSIONS):
+	docker build --rm -t $(NAME):$@ $@

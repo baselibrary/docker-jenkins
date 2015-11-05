@@ -1,22 +1,17 @@
-# baselibrary/jenkins [![Docker Repository on Quay.io](https://quay.io/repository/baselibrary/jenkins/status "Docker Repository on Quay.io")](https://quay.io/repository/baselibrary/jenkins)
+## ThoughtWorks Docker Image: jenkins
 
-## Installation and Usage
+[![](http://dockeri.co/image/baselibrary/jenkins)](https://registry.hub.docker.com/u/baselibrary/jenkins/)
 
-    docker pull quay.io/baselibrary/jenkins:${VERSION:-latest}
+### Base Docker Image
 
-## Available Versions (Tags)
+* `latest`: jenkins 1.625
+* `1.625` : jenkins 1.625
+* `1.625` : jenkins 1.609
 
-* `latest`: jenkins 1.626
-* `1.626`: jenkins 1.626
+### Installation
 
-## Deployment
+    docker pull baselibrary/jenkins
 
-To push the Docker image to Quay, run the following command:
+### Usage
 
-    make release
-
-## Continuous Integration
-
-Images are built and pushed to Docker Hub on every deploy. Because Quay currently only supports build triggers where the Docker tag name exactly matches a GitHub branch/tag name, we must run the following script to synchronize all our remote branches after a merge to master:
-
-    make sync-branches
+    docker run -it --rm baselibrary/jenkins
