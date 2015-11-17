@@ -3,7 +3,7 @@ MAINTAINER ShawnMa <qsma@thoughtworks.com>
 
 ## Version
 ENV JENKINS_MAJOR   1.609
-ENV JENKINS_VERSION 1.625.1
+ENV JENKINS_VERSION 1.625.2
 
 ## Repository
 RUN \
