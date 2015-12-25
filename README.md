@@ -6,7 +6,6 @@
 
 * `latest`: jenkins 1.625
 * `1.625` : jenkins 1.625
-* `1.609` : jenkins 1.609
 
 ### Installation
 

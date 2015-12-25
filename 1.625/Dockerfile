@@ -3,7 +3,7 @@ MAINTAINER ShawnMa <qsma@thoughtworks.com>
 
 ## Version
 ENV JENKINS_MAJOR   1.625
-ENV JENKINS_VERSION 1.625.2
+ENV JENKINS_VERSION 1.625.3
 
 ## Repository
 RUN \
@@ -32,7 +32,7 @@ EXPOSE 8080 50000
 
 VOLUME ["${JENKINS_HOME}"]
 
-ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
 
