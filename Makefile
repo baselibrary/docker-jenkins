@@ -1,21 +1,27 @@
 NAME     = baselibrary/jenkins
 REPO     = git@github.com:baselibrary/docker-jenkins.git
-LOCAL    = 192.168.99.2
+REGISTRY = thoughtworks.io
 VERSIONS = $(foreach df,$(wildcard */Dockerfile),$(df:%/Dockerfile=%))
 
-all: build
+all: build 
 
 build: $(VERSIONS)
+	@for version in $(VERSIONS); do \
+	docker build --rm --tag=$(NAME):$$version $$version; \
+	done
+
+push: $(VERSIONS)
+	@for version in $(VERSIONS); do \
+	docker tag -f ${NAME}:$$version ${REGISTRY}/${NAME}:$$version; \
+	docker push ${REGISTRY}/${NAME}:$$version; \
+	docker rmi -f ${REGISTRY}/${NAME}:$$version; \
+	done
+
+clean: $(VERSIONS)
+	@for version in $(VERSIONS); do \
+	docker rmi -f ${NAME}:$$version; \
+	docker rmi -f ${REGISTRY}/${NAME}:$$version; \
+	done
 
 update:
 	docker run --rm -v $$(pwd):/work -w /work buildpack-deps ./update.sh
-
-branches:
-	git fetch $(REPO) master
-	@$(foreach tag, $(VERSIONS), git branch -f $(tag) FETCH_HEAD;)
-	@$(foreach tag, $(VERSIONS), git push $(REPO) $(tag);)
-	@$(foreach tag, $(VERSIONS), git branch -D $(tag);)
-
-.PHONY: all build library $(VERSIONS)
-$(VERSIONS):
-	docker build --rm -t $(NAME):$@ $@ && docker tag ${NAME}:$@ ${LOCAL}/${NAME}:$@ && docker push ${LOCAL}/${NAME}:$@ && docker rmi ${LOCAL}/${NAME}:$@

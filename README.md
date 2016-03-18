@@ -4,8 +4,8 @@
 
 ### Base Docker Image
 
-* `latest`: jenkins 1.625
-* `1.625` : jenkins 1.625
+* `latest`: jenkins 1.642.3
+* `1.6`   : jenkins 1.642.3
 
 ### Installation
 
