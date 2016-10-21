@@ -12,7 +12,7 @@ versions=( "${versions[@]%/}" )
 
 for version in "${versions[@]}"; do
 	repoPackage="http://pkg.jenkins-ci.org/debian-stable/binary/Packages.gz"
-  fullVersion="$(curl -fsSL "${repoPackage}" | gunzip | awk -v pkgname="jenkins" -F ': ' '$1 == "Package" { pkg = $2 } pkg == pkgname && $1 == "Version" { print $2 }' | grep "^$version" | sort -rV | head -n1 )"
+  fullVersion="$(curl -fsSL "${repoPackage}" | gunzip | awk -v pkgname="jenkins" -F ': ' '$1 == "Package" { pkg = $2 } pkg == pkgname && $1 == "Version" { print $2 }' | sort -rV | head -n1 )"
 	(
 		set -x
 		cp docker-entrypoint.sh "$version/"

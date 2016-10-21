@@ -17,7 +17,6 @@ if [ "$1" = 'java' ]; then
   echo "initialize:"
   echo "========================================================================"
   mkdir -p "$JENKINS_HOME"
-  find /usr/share/jenkins/ref/ -type f -exec bash -c ". /usr/local/bin/jenkins-support; copy_reference_file '{}'" \;
   
   ##### run scripts  #####
   echo "========================================================================"

@@ -2,8 +2,8 @@ FROM baselibrary/java:8
 MAINTAINER ShawnMa <qsma@thoughtworks.com>
 
 ## Version
-ENV JENKINS_MAJOR   2.7
-ENV JENKINS_VERSION 2.7.2
+ENV JENKINS_MAJOR   2
+ENV JENKINS_VERSION 2.19.1
 
 ## Repository
 RUN \
@@ -40,5 +40,4 @@ VOLUME ["${JENKINS_HOME}"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
-
 
