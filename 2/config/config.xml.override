@@ -6,7 +6,7 @@
   </disabledAdministrativeMonitors>
   <version>1.0</version>
   <numExecutors>0</numExecutors>
-  <mode>EXCLUSIVE</mode>
+  <mode>NORMAL</mode>
   <useSecurity>true</useSecurity>
   <authorizationStrategy class="hudson.security.AuthorizationStrategy$Unsecured"/>
   <securityRealm class="hudson.security.SecurityRealm$None"/>
