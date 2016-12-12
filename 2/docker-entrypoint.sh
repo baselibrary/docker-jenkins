@@ -17,7 +17,8 @@ if [ "$1" = 'java' ]; then
   echo "initialize:"
   echo "========================================================================"
   mkdir -p "$JENKINS_HOME"
-  
+  find /usr/share/jenkins/ref/ -type f -exec bash -c '. /usr/local/bin/jenkins-support; for arg; do copy_reference_file "$arg"; done' _ {} +
+
   ##### run scripts  #####
   echo "========================================================================"
   echo "startup:"
@@ -28,7 +29,7 @@ if [ "$1" = 'java' ]; then
   echo "========================================================================"
   echo "configure:"
   echo "========================================================================"
-  
+
   #bring command to foreground
   fg
 else
