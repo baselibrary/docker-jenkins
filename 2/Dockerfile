@@ -3,7 +3,7 @@ MAINTAINER ShawnMa <qsma@thoughtworks.com>
 
 ## Version
 ENV JENKINS_MAJOR   2
-ENV JENKINS_VERSION 2.19.1
+ENV JENKINS_VERSION 2.19.4
 
 ## Repository
 RUN \
@@ -22,7 +22,7 @@ ADD config/* /var/lib/jenkins/
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
-ENV JENKINS_UC               http://updates.jenkins.io
+ENV JENKINS_UC               https://updates.jenkins.io
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 RUN \
@@ -40,4 +40,3 @@ VOLUME ["${JENKINS_HOME}"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
-
