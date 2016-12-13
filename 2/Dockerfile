@@ -39,4 +39,4 @@ VOLUME ["${JENKINS_HOME}"]
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
+CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war", "-Djenkins.install.runSetupWizard=false"]
