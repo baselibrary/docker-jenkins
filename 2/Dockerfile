@@ -18,7 +18,7 @@ RUN \
 
 ## Configurations
 ADD bin/*    /usr/local/bin/
-ADD config/* /var/lib/jenkins/
+ADD config   /usr/share/jenkins/ref
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
