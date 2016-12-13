@@ -27,7 +27,7 @@ ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 RUN \
   mkdir -p /usr/share/jenkins/ref &&\
-  /usr/local/bin/install-plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder simple-theme
+  /usr/local/bin/install-plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder simple-theme docker ldap
 
 ## Scripts
 ADD docker-entrypoint.sh /docker-entrypoint.sh
@@ -40,4 +40,3 @@ VOLUME ["${JENKINS_HOME}"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
-
