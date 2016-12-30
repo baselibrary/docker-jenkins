@@ -1,0 +1,44 @@
+ldap {
+{{if exists "/secret/ldap/config"}}
+  enabled            = true
+  server             = "ldap://{{getv "/secret/ldap/config/server"}}:{{getv "/secret/ldap/config/port"}}"
+  rootDN             = "{{getv "/secret/ldap/config/rootdn"}}"
+  userSearchBase     = "{{getv "/secret/ldap/config/userdn"}}"
+  userSearchFilter   = "{{getv "/secret/ldap/config/userfilter"}}"
+  groupSearchBase    = "{{getv "/secret/ldap/config/groupdn"}}"
+  groupSearchFilter  = "{{getv "/secret/ldap/config/groupfilter"}}"
+  groupSearchAttr    = "{{getv "/secret/ldap/config/groupattr"}}"
+  managerDN          = "{{getv "/secret/ldap/config/binddn"}}"
+  managerPassword    = "{{getv "/secret/ldap/config/bindpass"}}"
+  inhibitInferRootDN = false
+{{else}}
+  enabled            = false
+  server             =
+  rootDN             =
+  userSearchBase     =
+  userSearch         =
+  groupSearchBase    =
+  managerDN          =
+  managerPassword    =
+  inhibitInferRootDN = false
+{{end}}
+}
+
+matrixbasedsecurity {
+  enabled = true
+  users {
+    anonymous {
+      userId = hudson.security.ACL.ANONYMOUS_USERNAME
+      permissions = [
+                      hudson.model.Computer.CREATE,
+                      hudson.model.Computer.CONNECT,
+                      hudson.model.Hudson.READ,
+                      hudson.model.Job.READ]
+    }
+    authenticated {
+      userId = "authenticated"
+      permissions = [
+                       hudson.model.Hudson.ADMINISTER]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[template]
+src = "security.properties.tmpl"
+dest = "/var/lib/jenkins/security.properties"
+keys = [
+  "/secret/ldap/config",
+]

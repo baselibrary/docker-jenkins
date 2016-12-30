@@ -12,15 +12,15 @@ FAILED="$REF_DIR/failed-plugins.txt"
 
 . /usr/local/bin/jenkins-support
 
-function getLockFile() {
-    echo -n "$REF_DIR/${1}.lock"
+getLockFile() {
+    printf '%s' "$REF_DIR/${1}.lock"
 }
 
-function getArchiveFilename() {
-    echo -n "$REF_DIR/${1}.jpi"
+getArchiveFilename() {
+    printf '%s' "$REF_DIR/${1}.jpi"
 }
 
-function download() {
+download() {
     local plugin originalPlugin version lock ignoreLockFile
     plugin="$1"
     version="${2:-latest}"
@@ -50,7 +50,7 @@ function download() {
     fi
 }
 
-function doDownload() {
+doDownload() {
     local plugin version url jpi
     plugin="$1"
     version="$2"
@@ -62,23 +62,25 @@ function doDownload() {
         return 0
     fi
 
-    url="$JENKINS_UC/download/plugins/$plugin/$version/${plugin}.hpi"
+    JENKINS_UC_DOWNLOAD=${JENKINS_UC_DOWNLOAD:-"$JENKINS_UC/download"}
+
+    url="$JENKINS_UC_DOWNLOAD/plugins/$plugin/$version/${plugin}.hpi"
 
     echo "Downloading plugin: $plugin from $url"
-    curl --connect-timeout 5 --retry 5 --retry-delay 0 --retry-max-time 60 -s -f -L "$url" -o "$jpi"
+    curl --connect-timeout ${CURL_CONNECTION_TIMEOUT:-20} --retry ${CURL_RETRY:-5} --retry-delay ${CURL_RETRY_DELAY:-0} --retry-max-time ${CURL_RETRY_MAX_TIME:-60} -s -f -L "$url" -o "$jpi"
     return $?
 }
 
-function checkIntegrity() {
+checkIntegrity() {
     local plugin jpi
     plugin="$1"
     jpi="$(getArchiveFilename "$plugin")"
 
-    zip -T "$jpi" >/dev/null
+    unzip -t -qq "$jpi" >/dev/null
     return $?
 }
 
-function resolveDependencies() {
+resolveDependencies() {
     local plugin jpi dependencies
     plugin="$1"
     jpi="$(getArchiveFilename "$plugin")"
@@ -92,7 +94,7 @@ function resolveDependencies() {
 
     echo " > $plugin depends on $dependencies"
 
-    IFS=',' read -a array <<< "$dependencies"
+    IFS=',' read -r -a array <<< "$dependencies"
 
     for d in "${array[@]}"
     do
@@ -119,7 +121,7 @@ function resolveDependencies() {
     wait
 }
 
-function bundledPlugins() {
+bundledPlugins() {
     local JENKINS_WAR=/usr/share/jenkins/jenkins.war
     if [ -f $JENKINS_WAR ]
     then
@@ -141,7 +143,7 @@ function bundledPlugins() {
     fi
 }
 
-function versionFromPlugin() {
+versionFromPlugin() {
     local plugin=$1
     if [[ $plugin =~ .*:.* ]]; then
         echo "${plugin##*:}"
@@ -151,7 +153,7 @@ function versionFromPlugin() {
 
 }
 
-function installedPlugins() {
+installedPlugins() {
     for f in "$REF_DIR"/*.jpi; do
         echo "$(basename "$f" | sed -e 's/\.jpi//'):$(get_plugin_version "$f")"
     done
@@ -168,10 +170,10 @@ main() {
         mkdir "$(getLockFile "${plugin%%:*}")"
     done
 
-    echo -e "\nAnalyzing war..."
+    echo "Analyzing war..."
     bundledPlugins="$(bundledPlugins)"
 
-    echo -e "\nDownloading plugins..."
+    echo "Downloading plugins..."
     for plugin in "$@"; do
         version=""
 
@@ -192,11 +194,11 @@ main() {
     installedPlugins
 
     if [[ -f $FAILED ]]; then
-        echo -e "\nSome plugins failed to download!\n$(<"$FAILED")" >&2
+        echo "Some plugins failed to download!" "$(<"$FAILED")" >&2
         exit 1
     fi
 
-    echo -e "\nCleaning up locks"
+    echo "Cleaning up locks"
     rm -r "$REF_DIR"/*.lock
 }
 
