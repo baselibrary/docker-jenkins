@@ -7,7 +7,7 @@ ENV JENKINS_VERSION 2.46.2
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
-ENV JENKINS_UC               http://updates.jenkins-ci.org
+ENV JENKINS_UC               https://updates.jenkins.io
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 ## Arguments
@@ -41,10 +41,10 @@ COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh      /usr/local/bin/jenkins.sh
 COPY plugins.sh      /usr/local/bin/plugins.sh
 
-##
+## Provisions
 RUN \
   mkdir -p /usr/share/jenkins/ref/init.groovy.d &&\
-  chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref &&\
+  chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 ## Configurations
 COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
