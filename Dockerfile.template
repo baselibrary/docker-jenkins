@@ -19,17 +19,21 @@ ENV JENKINS_SLAVE_AGENT_PORT 50000
 RUN \
   apt-get update &&\
   apt-get install -y jenkins=$JENKINS_VERSION zip git cvs subversion mercurial &&\
+  mkdir -p /usr/share/jenkins/ref/init.groovy.d &&\
   rm -rf /var/lib/apt/lists/*
-
-## Configurations
-RUN \
-  mkdir -p /usr/share/jenkins/ref/init.groovy.d
-COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 
 ## Scripts
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh      /usr/local/bin/jenkins.sh
 COPY plugins.sh      /usr/local/bin/plugins.sh
+
+## Plugins
+RUN \
+  /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
+
+## Configurations
+COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
+COPY jenkins.properties $JENKINS_HOME/
 
 EXPOSE 8080 50000
 

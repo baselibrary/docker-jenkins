@@ -1,27 +1,11 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
+major=2
+version="$(curl -fsSL "http://pkg.jenkins-ci.org/debian-stable/binary/Packages.gz" | gunzip | awk -v pkgname="jenkins" -F ': ' '$1 == "Package" { pkg = $2 } pkg == pkgname && $1 == "Version" { print $2 }' | sort -rV | head -n1 )"
 
-versions=( "$@" )
-if [ ${#versions[@]} -eq 0 ]; then
-	versions=( */ )
-fi
-versions=( "${versions[@]%/}" )
-
-
-for version in "${versions[@]}"; do
-	repoPackage="http://pkg.jenkins-ci.org/debian-stable/binary/Packages.gz"
-  fullVersion="$(curl -fsSL "${repoPackage}" | gunzip | awk -v pkgname="jenkins" -F ': ' '$1 == "Package" { pkg = $2 } pkg == pkgname && $1 == "Version" { print $2 }' | sort -rV | head -n1 )"
-	(
-		set -x
-		cp init.groovy     "$version/"
-		cp jenkins-support "$version/" 
-		cp jenkins.sh      "$version/" && chmod a+x  "$version/jenkins.sh"
-		cp plugins.sh      "$version/" && chmod a+x  "$version/plugins.sh"
-		sed '
-		  s/%%JENKINS_MAJOR%%/'"$version"'/g;
-		  s/%%JENKINS_VERSION%%/'"$fullVersion"'/g;
-		' Dockerfile.template > "$version/Dockerfile"
-	)
-done
+set -x
+sed '
+	s/%%JENKINS_MAJOR%%/'"$major"'/g;
+	s/%%JENKINS_VERSION%%/'"$version"'/g;
+' Dockerfile.template > "Dockerfile"
