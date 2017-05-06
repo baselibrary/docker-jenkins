@@ -7,7 +7,7 @@ ENV JENKINS_VERSION 2.46.2
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
-ENV JENKINS_UC               http://updates.jenkins.io
+ENV JENKINS_UC               https://updates.jenkins.io
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 ## Arguments
@@ -45,7 +45,7 @@ RUN \
   /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
 
 ## Configurations
-COPY conf/* /usr/share/jenkins/ref
+COPY conf/* /usr/share/jenkins/ref/
 
 USER ${user}
 
