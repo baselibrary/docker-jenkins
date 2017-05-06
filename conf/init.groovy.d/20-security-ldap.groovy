@@ -7,7 +7,7 @@ def file = new File("/usr/share/jenkins/rancher/jenkins.properties")
 if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()){
   def config = new ConfigSlurper().parse(file.toURI().toURL())
 
-  if (config && config.containsKey("security") ) {
+  if (config && config.security.ldap != null) {
     instance.securityRealm = new LDAPSecurityRealm(
         server                     = config.security.ldap.server,
         rootDN                     = config.security.ldap.rootDN,
@@ -18,7 +18,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != nul
         groupMembershipFilter      = null,
         managerDN                  = config.security.ldap.managerDN,
         managerPassword            = config.security.ldap.managerPassword,
-        inhibitInferRootDN         = false,
+        inhibitInferRootDN         = true,
         disableMailAddressResolver = false,
         cache                      = null
     )

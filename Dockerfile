@@ -7,7 +7,7 @@ ENV JENKINS_VERSION 2.46.2
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
-ENV JENKINS_UC               https://updates.jenkins.io
+ENV JENKINS_UC               http://updates.jenkins.io
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 
 ## Arguments
