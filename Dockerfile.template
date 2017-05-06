@@ -32,7 +32,6 @@ RUN \
   /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
 
 ## Configurations
-COPY jenkins.properties /usr/share/jenkins/ref/
 COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
 
 EXPOSE 8080 50000
