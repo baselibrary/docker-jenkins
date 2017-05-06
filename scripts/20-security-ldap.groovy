@@ -2,12 +2,10 @@ import jenkins.model.*
 import hudson.security.*
 
 def instance = Jenkins.getInstance()
+def file = new File("/usr/share/jenkins/rancher/jenkins.properties")
 
-def home_dir  = System.getenv("JENKINS_HOME")
-def conf_file = new File("$home_dir/jenkins.properties")
-
-if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && conf_file.exists()){
-  def properties = new ConfigSlurper().parse(conf_file.toURI().toURL())
+if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()){
+  def properties = new ConfigSlurper().parse(file.toURI().toURL())
 
   if (properties && properties.containsKey("security.ldap")) {
     instance.securityRealm = new LDAPSecurityRealm(
