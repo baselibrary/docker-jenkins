@@ -33,9 +33,7 @@ RUN \
   rm -rf /var/lib/apt/lists/*
 
 ## Scripts
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh      /usr/local/bin/jenkins.sh
-COPY plugins.sh      /usr/local/bin/plugins.sh
+COPY bin/* /usr/local/bin/
 
 ## Provisions
 RUN \
@@ -46,12 +44,8 @@ RUN \
 RUN \
   /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
 
-## Tools
-ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /usr/bin/tini
-RUN chmod a+x /usr/bin/tini
-
 ## Configurations
-COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
+COPY conf/* /usr/share/jenkins/ref
 
 USER ${user}
 
