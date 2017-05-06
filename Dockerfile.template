@@ -22,6 +22,10 @@ RUN \
   mkdir -p /usr/share/jenkins/ref/init.groovy.d &&\
   rm -rf /var/lib/apt/lists/*
 
+## Tools
+ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /usr/bin/tini
+RUN chmod a+x /usr/bin/tini
+
 ## Scripts
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh      /usr/local/bin/jenkins.sh
@@ -38,4 +42,4 @@ EXPOSE 8080 50000
 
 VOLUME ["${JENKINS_HOME}"]
 
-ENTRYPOINT ["/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["tini", "--", "/usr/local/bin/jenkins.sh"]
