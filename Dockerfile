@@ -32,10 +32,6 @@ RUN \
   apt-get install -y jenkins=$JENKINS_VERSION zip git cvs subversion mercurial &&\
   rm -rf /var/lib/apt/lists/*
 
-## Tools
-ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /usr/bin/tini
-RUN chmod a+x /usr/bin/tini
-
 ## Scripts
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh      /usr/local/bin/jenkins.sh
@@ -46,12 +42,16 @@ RUN \
   mkdir -p /usr/share/jenkins/ref/init.groovy.d &&\
   chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
-## Configurations
-COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
-
 ## Plugins
 RUN \
   /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
+
+## Tools
+ADD https://github.com/krallin/tini/releases/download/v0.14.0/tini /usr/bin/tini
+RUN chmod a+x /usr/bin/tini
+
+## Configurations
+COPY scripts/*          /usr/share/jenkins/ref/init.groovy.d/
 
 USER ${user}
 

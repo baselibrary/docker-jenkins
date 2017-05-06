@@ -5,19 +5,19 @@ def instance = Jenkins.getInstance()
 def file = new File("/usr/share/jenkins/rancher/jenkins.properties")
 
 if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()){
-  def properties = new ConfigSlurper().parse(file.toURI().toURL())
+  def config = new ConfigSlurper().parse(file.toURI().toURL())
 
-  if (properties && properties.containsKey("security.ldap")) {
+  if (config && config.containsKey("security") ) {
     instance.securityRealm = new LDAPSecurityRealm(
-        server                     = properties.get("security.ldap.server"),
-        rootDN                     = properties.get("security.ldap.rootDN"),
-        userSearchBase             = properties.get("security.ldap.userSearchBase"),
-        userSearch                 = properties.get("security.ldap.userSearchFilter"),
-        groupSearchBase            = properties.get("security.ldap.groupSearchBase"),
-        groupSearchFilter          = properties.get("security.ldap.groupSearchFilter"),
-        groupMembershipStrategy    = null,
-        managerDN                  = properties.get("security.ldap.managerDN"),
-        managerPasswordSecret      = properties.get("security.ldap.managerPassword"),
+        server                     = config.security.ldap.server,
+        rootDN                     = config.security.ldap.rootDN,
+        userSearchBase             = config.security.ldap.userSearchBase,
+        userSearch                 = config.security.ldap.userSearchFilter,
+        groupSearchBase            = config.security.ldap.groupSearchBase,
+        groupSearchFilter          = config.security.ldap.groupSearchFilter,
+        groupMembershipFilter      = null,
+        managerDN                  = config.security.ldap.managerDN,
+        managerPassword            = config.security.ldap.managerPassword,
         inhibitInferRootDN         = false,
         disableMailAddressResolver = false,
         cache                      = null
