@@ -4,7 +4,7 @@ import hudson.security.*
 import groovy.json.JsonSlurper
 
 Jenkins instance = Jenkins.getInstance()
-def file = new File("/usr/share/jenkins/rancher/config.json")
+def file = new File("/usr/share/jenkins/rancher/jenkins.json")
 
 if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()) {
   def state = new JsonSlurper().parse(file)
