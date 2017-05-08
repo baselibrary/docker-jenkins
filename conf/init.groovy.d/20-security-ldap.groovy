@@ -10,7 +10,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != nul
   def config = new ConfigSlurper().parse(file.toURI().toURL())
   def cipher = Cipher.getInstance("AES")
 
-  cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec("ThoughtWorks", "AES"))
+  cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec("ThoughtWorks".bytes, "AES"))
   if (config && config.security.ldap != null && config.security.ldap.enabled) {
     instance.securityRealm = new LDAPSecurityRealm(
         server                     = config.security.ldap.server,
