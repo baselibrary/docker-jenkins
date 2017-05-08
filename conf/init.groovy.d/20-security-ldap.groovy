@@ -19,7 +19,7 @@ class Crypter {
   // do the magic
   def encrypt (def plainText, def secret) {
     secret = expandKey(secret)
-    def cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    def cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE")
     SecretKeySpec key = new SecretKeySpec(secret.getBytes("UTF-8"), "AES")
     cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(secret.getBytes("UTF-8")))
 
@@ -31,7 +31,7 @@ class Crypter {
     byte[] decodedBytes = cypherText.decodeBase64()
 
     secret = expandKey(secret)
-    def cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+    def cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE")
     SecretKeySpec key = new SecretKeySpec(secret.getBytes("UTF-8"), "AES")
     cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(secret.getBytes("UTF-8")))
 
