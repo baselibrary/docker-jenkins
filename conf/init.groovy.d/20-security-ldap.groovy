@@ -22,7 +22,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != nul
         disableMailAddressResolver = false,
         cache                      = null
     )
-    jenkins.authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    instance.authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.save()
   }
 }
