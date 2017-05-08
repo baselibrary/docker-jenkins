@@ -17,7 +17,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != nul
         groupSearchFilter          = config.security.ldap.groupSearchFilter,
         groupMembershipFilter      = null,
         managerDN                  = config.security.ldap.managerDN,
-        managerPassword            = Secret.decrypt(config.security.ldap.managerPassword),
+        managerPassword            = Secret.decrypt(config.security.ldap.managerPassword).plainText,
         inhibitInferRootDN         = false,
         disableMailAddressResolver = false,
         cache                      = null
