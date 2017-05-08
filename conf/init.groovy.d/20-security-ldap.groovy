@@ -1,35 +1,38 @@
 import jenkins.model.*
-import hudson.security.*
 import hudson.util.*
+import hudson.security.*
+import groovy.json.JsonSlurper
 
 Jenkins instance = Jenkins.getInstance()
-def file = new File("/usr/share/jenkins/rancher/jenkins.groovy")
+def file = new File("/usr/share/jenkins/rancher/config.json")
 
-if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()){
-  def config = new ConfigSlurper().parse(file.toURI().toURL())
-  if (config && config.security.ldap != null && config.security.ldap.enabled) {
-    instance.securityRealm = new LDAPSecurityRealm(
-        server                     = config.security.ldap.server,
-        rootDN                     = config.security.ldap.rootDN,
-        userSearchBase             = config.security.ldap.userSearchBase,
-        userSearch                 = config.security.ldap.userSearchFilter,
-        groupSearchBase            = config.security.ldap.groupSearchBase,
-        groupSearchFilter          = config.security.ldap.groupSearchFilter,
-        groupMembershipFilter      = null,
-        managerDN                  = config.security.ldap.managerDN,
-        managerPassword            = Secret.decrypt(config.security.ldap.managerPassword).plainText,
-        inhibitInferRootDN         = false,
-        disableMailAddressResolver = false,
-        cache                      = null
-    )
-    instance.authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy()
-  }else {
+if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()) {
+  def state = new JsonSlurper().parse(file)
+
+  if (state != null) {
+    // ldap
+    if (state.security.ldap != null) {
+      instance.securityRealm = new LDAPSecurityRealm(server = state.security.ldap.server,
+          rootDN = state.security.ldap.rootDN,
+          userSearchBase = state.security.ldap.userSearchBase,
+          userSearch = state.security.ldap.userSearchFilter,
+          groupSearchBase = state.security.ldap.groupSearchBase,
+          groupSearchFilter = state.security.ldap.groupSearchFilter,
+          groupMembershipFilter = null,
+          managerDN = state.security.ldap.managerDN,
+          managerPassword = Secret.decrypt(state.security.ldap.managerPassword),
+          inhibitInferRootDN = false,
+          disableMailAddressResolver = false,
+          cache = null)
+      instance.authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    } else {
+      instance.securityRealm = SecurityRealm.NO_AUTHENTICATION
+      instance.authorizationStrategy = AuthorizationStrategy.UNSECURED
+    }
+  } else {
     instance.securityRealm = SecurityRealm.NO_AUTHENTICATION
     instance.authorizationStrategy = AuthorizationStrategy.UNSECURED
   }
-} else {
-  instance.securityRealm = SecurityRealm.NO_AUTHENTICATION
-  instance.authorizationStrategy = AuthorizationStrategy.UNSECURED
 }
 
 instance.save()
