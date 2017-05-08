@@ -1,13 +1,17 @@
 import jenkins.model.*
 import hudson.security.*
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 
-def instance = Jenkins.getInstance()
-def file = new File("/usr/share/jenkins/rancher/jenkins.properties")
+Jenkins instance = Jenkins.getInstance()
+def file = new File("/usr/share/jenkins/rancher/jenkins.groovy")
 
 if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != null && file.exists()){
   def config = new ConfigSlurper().parse(file.toURI().toURL())
+  def cipher = Cipher.getInstance("AES")
 
-  if (config && config.security.ldap != null) {
+  cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec("ThoughtWorks", "AES"))
+  if (config && config.security.ldap != null && config.security.ldap.enabled) {
     instance.securityRealm = new LDAPSecurityRealm(
         server                     = config.security.ldap.server,
         rootDN                     = config.security.ldap.rootDN,
@@ -17,12 +21,19 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "ldap" } != nul
         groupSearchFilter          = config.security.ldap.groupSearchFilter,
         groupMembershipFilter      = null,
         managerDN                  = config.security.ldap.managerDN,
-        managerPassword            = config.security.ldap.managerPassword,
-        inhibitInferRootDN         = true,
+        managerPassword            = new String(cipher.doFinal(config.security.ldap.managerPassword)),
+        inhibitInferRootDN         = false,
         disableMailAddressResolver = false,
         cache                      = null
     )
     instance.authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy()
-    instance.save()
+  }else {
+    instance.securityRealm = SecurityRealm.NO_AUTHENTICATION
+    instance.authorizationStrategy = AuthorizationStrategy.UNSECURED
   }
+} else {
+  instance.securityRealm = SecurityRealm.NO_AUTHENTICATION
+  instance.authorizationStrategy = AuthorizationStrategy.UNSECURED
 }
+
+instance.save()
