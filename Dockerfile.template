@@ -37,7 +37,7 @@ COPY bin/* /usr/local/bin/
 
 ## Provisions
 RUN \
-  mkdir -p /usr/share/jenkins/ref/init.groovy.d &&\
+  mkdir -p /usr/share/jenkins/ref &&\
   chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 ## Plugins
