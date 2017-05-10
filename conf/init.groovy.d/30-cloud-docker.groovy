@@ -10,6 +10,18 @@ import groovy.json.JsonSlurper
 
 //############### Main ###################//
 
+checkedTimes = 3
+def checkStarted() {
+  if(Jenkins == null) {
+    checkedTimes = checkedTimes - 1
+    if(checkedTimes <= 0) exit(1)
+    sleep(5000)
+    checkStarted()
+  }
+  return
+}
+checkStarted()
+
 Jenkins instance = Jenkins.getInstance()
 def file = new File("/usr/share/jenkins/rancher/jenkins.json")
 def state = new JsonSlurper().parse(file)
