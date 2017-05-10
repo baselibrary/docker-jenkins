@@ -21,37 +21,37 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
     def templates = []
     docker.templates.each { template ->
       def dockerTemplateBase = new DockerTemplateBase(
-             template.image,
-             template.dns,
-             null,
-             template.command,
-             template.volumes,
-             template.volumesFrom,
-             template.environments,
-             template.lxcConf,
-             template.hostname,
-             template.memoryLimit,
-             template.memorySwap,
-             template.cpuShares,
-             template.bindPorts,
-             template.bindAllPorts,
-             template.privileged,
-             template.tty,
-             template.macAddress
+             image              = template.image,
+             dnsString          = template.dns,
+             network            = template.network,
+             dockerCommand      = template.command,
+             volumesString      = template.volumes,
+             volumesFromString  = template.volumesFrom,
+             environmentsString = template.environments,
+             lxcConfString      = template.lxcConf,
+             hostname           = template.hostname,
+             memoryLimit        = template.memoryLimit,
+             memorySwap         = template.memorySwap,
+             cpuShares          = template.cpuShares,
+             bindPorts          = template.bindPorts,
+             bindAllPorts       = template.bindAllPorts,
+             privileged         = template.privileged,
+             tty                = template.tty,
+             macAddress         = template.macAddress
       )
 
       def dockerTemplate = new DockerTemplate(
-          dockerTemplateBase,
-          template.label,
-          template.remoteFs,
-          template.remoteFsMapping,
-          template.instanceCap,
-          Node.Mode.EXCLUSIVE,
-          1,
-          new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "", "", "", "", null, 0, 0)),
-          new DockerOnceRetentionStrategy(10),
-          false,
-          DockerImagePullStrategy.PULL_LATEST
+          dockerTemplateBase = dockerTemplateBase,
+          labelString        = template.label,
+          remoteFs           = template.remoteFs,
+          remoteFsMapping    = template.remoteFsMapping,
+          instanceCapStr     = template.instanceCap,
+          mode               = Node.Mode.EXCLUSIVE,
+          numExecutors       = 1,
+          launcher           = new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "", "", "", "", null, 0, 0)),
+          retentionStrategy  = new DockerOnceRetentionStrategy(10),
+          removeVolumes      = false,
+          pullStrategy       = DockerImagePullStrategy.PULL_LATEST
         )
 
       templates.add(dockerTemplate)
@@ -62,14 +62,14 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
       instance.clouds.remove(Jenkins.instance.clouds.getByName(docker.name));
     }
     instance.clouds.add(new DockerCloud(
-                       docker.name,
-                       templates,
-                       docker.serverUrl ?: "unix:///var/run/docker.sock",
-                       docker.containerCap ?: 50,
-                       docker.connectTimeout ?: 15, // Well, it's one for the money...
-                       docker.readTimeout ?: 15,    // Two for the show
-                       docker.credentialsId ?: null,
-                       null))
+                       name            = docker.name,
+                       templates       = templates,
+                       serverUrl       = docker.serverUrl ?: "unix:///var/run/docker.sock",
+                       containerCap    = docker.containerCap ?: 50,
+                       connectTimeout  = docker.connectTimeout ?: 15, // Well, it's one for the money...
+                       readTimeout     = docker.readTimeout ?: 15,    // Two for the show
+                       credentialsId   = docker.credentialsId ?: null,
+                       version         = null))
 
 
   }
