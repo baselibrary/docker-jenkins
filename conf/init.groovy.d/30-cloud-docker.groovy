@@ -31,13 +31,13 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
     docker.templates.each { template ->
       def dockerTemplateBase = new DockerTemplateBase(
              template.image,
-             template.dnsString,
+             template.dns,
              null,
-             template.dockerCommand,
-             template.volumesString,
-             template.volumesFromString,
-             template.environmentsString,
-             template.lxcConfString,
+             template.command,
+             template.volumes,
+             template.volumesFrom,
+             template.environments,
+             template.lxcConf,
              template.hostname,
              template.memoryLimit,
              template.memorySwap,
@@ -51,10 +51,10 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
 
       def dockerTemplate = new DockerTemplate(
           dockerTemplateBase,
-          template.labelString,
+          template.label,
           template.remoteFs,
           template.remoteFsMapping,
-          template.instanceCapStr,
+          template.instanceCap,
           Node.Mode.EXCLUSIVE,
           1,
           new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "", "", "", "", null, 0, 0)),
@@ -74,7 +74,7 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
                        docker.name,
                        templates,
                        docker.serverUrl ?: "unix:///var/run/docker.sock",
-                       docker.containerCapStr ?: 50,
+                       docker.containerCap ?: 50,
                        docker.connectTimeout ?: 15, // Well, it's one for the money...
                        docker.readTimeout ?: 15,    // Two for the show
                        docker.credentialsId ?: null,
