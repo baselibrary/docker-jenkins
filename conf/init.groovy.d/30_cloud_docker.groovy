@@ -13,7 +13,7 @@ Jenkins instance = Jenkins.getInstance()
 def file = new File("/usr/share/jenkins/rancher/jenkins.json")
 def state = new JsonSlurper().parse(file)
 
-if ( instance.pluginManager.activePlugins.find { it.shortName == "docker" } != null && file.exists()) {
+if ( instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin" } != null && file.exists()) {
   if (state != null && state.cloud != null && state.cloud.docker != null) {
     def dockerClouds = []
 
