@@ -16,6 +16,7 @@ echo "                                                                          
 : ${JAVA_OPTS:="-Djava.awt.headless=true"}
 
 #####   check & initialize  #####
+rm -rf /var/lib/jenkins/init.groovy.d
 echo "$JENKINS_VERSION" > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 echo "$JENKINS_VERSION" > /usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion
 find /usr/share/jenkins/ref/ -type f -exec bash -c '. /usr/local/bin/jenkins-support; for arg; do copy_reference_file "$arg"; done' _ {} +
