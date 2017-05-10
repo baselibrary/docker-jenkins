@@ -46,7 +46,7 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
           remoteFs           = template.remoteFs,
           remoteFsMapping    = template.remoteFsMapping,
           instanceCapStr     = template.instanceCap,
-          mode               = Node.Mode.EXCLUSIVE,
+          mode               = Node.Mode.NORMAL,
           numExecutors       = 1,
           launcher           = new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "", "", "", "", null, 0, 0)),
           retentionStrategy  = new DockerOnceRetentionStrategy(10),
