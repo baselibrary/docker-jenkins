@@ -16,19 +16,25 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "credentials" }
   def state = new JsonSlurper().parse(file)
 
   if (state != null && state.credentials != null) {
-    domain = Domain.global()
-    store  = Jenkins.getInstance().getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+    def domain      = Domain.global()
+    def store       = instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+    def credentials = CredentialsProvider.lookupCredentials(StandardUsernameCredentials.class, instance)
 
-    state.credentials.each {
+    state.credentials.each { item ->
       usernameAndPassword = new UsernamePasswordCredentialsImpl(
         CredentialsScope.GLOBAL,
-        it.id, //ID
-        it.description, //Description
-        it.username, //Username
-        it.password //Password
+        item.id,          //ID
+        item.description, //Description
+        item.username,    //Username
+        item.password     //Password
       )
 
-      store.addCredentials(domain, usernameAndPassword) //return true or false
+      def credential = credentials.findResult { it.id == item.id ? it : null }
+      if(credential) {
+        store.updateCredentials(domain, credential, usernameAndPassword)
+      }else {
+        store.addCredentials(domain, usernameAndPassword) //return true or false
+      }
     }
   }
 }
