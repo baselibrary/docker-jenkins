@@ -9,19 +9,6 @@ import com.nirima.jenkins.plugins.docker.strategy.*
 import groovy.json.JsonSlurper
 
 //############### Main ###################//
-
-checkedTimes = 3
-def checkStarted() {
-  if(Jenkins == null) {
-    checkedTimes = checkedTimes - 1
-    if(checkedTimes <= 0) exit(1)
-    sleep(5000)
-    checkStarted()
-  }
-  return
-}
-checkStarted()
-
 Jenkins instance = Jenkins.getInstance()
 def file = new File("/usr/share/jenkins/rancher/jenkins.json")
 def state = new JsonSlurper().parse(file)
@@ -59,7 +46,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "docker" } != n
           remoteFs           = template.remoteFs,
           remoteFsMapping    = template.remoteFsMapping,
           instanceCapStr     = template.instanceCap,
-          mode               = Node.Mode.NORMAL,
+          mode               = hudson.model.Node.Mode.NORMAL,
           numExecutors       = 1,
           launcher           = new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "", "", "", "", null, 0, 0)),
           retentionStrategy  = new DockerOnceRetentionStrategy(10),
