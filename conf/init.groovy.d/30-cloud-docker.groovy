@@ -1,21 +1,12 @@
 import jenkins.model.*
 import hudson.util.*
-import hudson.security.*
-import groovy.json.JsonSlurper
-import com.cloudbees.plugins.credentials.Credentials
-import com.cloudbees.plugins.credentials.CredentialsScope
-import com.cloudbees.plugins.credentials.domains.Domain
-import com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl
-import com.cloudbees.plugins.credentials.SystemCredentialsProvider
-import hudson.plugins.sshslaves.SSHConnector
-import hudson.plugins.sshslaves.SSHLauncher
-import hudson.model.Hudson
-import hudson.slaves.Cloud
-import java.net.*
-
+import hudson.model.*
+import hudson.slaves.*
+import hudson.plugins.sshslaves.*
 import com.nirima.jenkins.plugins.docker.*
 import com.nirima.jenkins.plugins.docker.launcher.*
 import com.nirima.jenkins.plugins.docker.strategy.*
+import groovy.json.JsonSlurper
 
 //############### Main ###################//
 
