@@ -3,6 +3,7 @@ import hudson.util.*
 import hudson.model.*
 import hudson.slaves.*
 import hudson.plugins.sshslaves.*
+import hudson.plugins.sshslaves.verifiers.*
 import com.nirima.jenkins.plugins.docker.*
 import com.nirima.jenkins.plugins.docker.launcher.*
 import com.nirima.jenkins.plugins.docker.strategy.*
@@ -48,7 +49,7 @@ if ( instance.pluginManager.activePlugins.find { it.shortName == "docker-plugin"
           instanceCapStr     = template.instanceCap,
           mode               = hudson.model.Node.Mode.NORMAL,
           numExecutors       = 1,
-          launcher           = new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8", "", "", "", null, 0, 0)),
+          launcher           = new DockerComputerSSHLauncher(new SSHConnector(22, docker.credentialsId, "-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8", "", "", "", null, 0, 0, new NonVerifyingKeyVerificationStrategy())),
           retentionStrategy  = new DockerOnceRetentionStrategy(10),
           removeVolumes      = false,
           pullStrategy       = DockerImagePullStrategy.PULL_LATEST
