@@ -14,13 +14,14 @@ Jenkins instance = Jenkins.getInstance()
 def file = new File("/usr/share/jenkins/rancher/jenkins.json")
 def state = new JsonSlurper().parse(file)
 
-if (state != null && state.cloud != null && state.cloud.docker != null) {
-  def dockerClouds = []
+if ( instance.pluginManager.activePlugins.find { it.shortName == "docker" } != null && file.exists()) {
+  if (state != null && state.cloud != null && state.cloud.docker != null) {
+    def dockerClouds = []
 
-  state.cloud.docker.each { docker ->
-    def templates = []
-    docker.templates.each { template ->
-      def dockerTemplateBase = new DockerTemplateBase(
+    state.cloud.docker.each { docker ->
+      def templates = []
+      docker.templates.each { template ->
+        def dockerTemplateBase = new DockerTemplateBase(
              image              = template.image,
              dnsString          = template.dns,
              network            = template.network,
@@ -38,9 +39,9 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
              privileged         = template.privileged,
              tty                = template.tty,
              macAddress         = template.macAddress
-      )
+        )
 
-      def dockerTemplate = new DockerTemplate(
+        def dockerTemplate = new DockerTemplate(
           dockerTemplateBase = dockerTemplateBase,
           labelString        = template.label,
           remoteFs           = template.remoteFs,
@@ -54,14 +55,14 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
           pullStrategy       = DockerImagePullStrategy.PULL_LATEST
         )
 
-      templates.add(dockerTemplate)
-    }
+        templates.add(dockerTemplate)
+      }
 
 
-    if(instance.clouds.getByName(docker.name)) {
-      instance.clouds.remove(Jenkins.instance.clouds.getByName(docker.name));
-    }
-    instance.clouds.add(new DockerCloud(
+      if(instance.clouds.getByName(docker.name)) {
+        instance.clouds.remove(Jenkins.instance.clouds.getByName(docker.name));
+      }
+      instance.clouds.add(new DockerCloud(
                        name            = docker.name,
                        templates       = templates,
                        serverUrl       = docker.serverUrl ?: "unix:///var/run/docker.sock",
@@ -72,6 +73,7 @@ if (state != null && state.cloud != null && state.cloud.docker != null) {
                        version         = null))
 
 
+    }
   }
 }
 
