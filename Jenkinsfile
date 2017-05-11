@@ -9,23 +9,19 @@ node('docker') {
     deleteDir()
 
     stage('checkout') {
-        checkout scm
+      checkout scm
     }
 
-    if (!infra.isTrusted()) {
-        /* Outside of the trusted.ci environment, we're building and testing
-         * the Dockerful in this repository, but not publishing to docker hub
-         */
-        stage('Build') {
-            docker.build('jenkins')
-        }
 
-        stage('Test') {
-            sh """
-            git submodule update --init --recursive
-            git clone https://github.com/sstephenson/bats.git
-            bats/bin/bats tests
-            """
-        }
+    stage('build') {
+      docker.build('jenkins')
+    }
+
+    stage('test') {
+      sh """
+        git submodule update --init --recursive
+        git clone https://github.com/sstephenson/bats.git
+        bats/bin/bats tests
+        """
     }
 }
