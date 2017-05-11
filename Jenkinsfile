@@ -16,12 +16,4 @@ node('docker') {
     stage('build') {
       docker.build('jenkins')
     }
-
-    stage('test') {
-      sh """
-        git submodule update --init --recursive
-        git clone https://github.com/sstephenson/bats.git
-        bats/bin/bats tests
-        """
-    }
 }
