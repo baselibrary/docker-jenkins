@@ -42,7 +42,7 @@ RUN \
 
 ## Plugins
 RUN \
-  /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap blueocean
+  /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap
 
 ## Configurations
 ADD conf /usr/share/jenkins/ref
