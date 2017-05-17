@@ -54,7 +54,7 @@ COPY bin/* /usr/local/bin/
 
 ## Plugins
 RUN \
-  /usr/local/bin/plugins.sh git subversion workflow-aggregator dashboard-view cloudbees-folder token-macro simple-theme docker ldap locale
+  /usr/local/bin/plugins.sh git subversion ldap locale simple-theme docker dashboard-view cloudbees-folder token-macro workflow-aggregator
 
 ## Configurations
 ADD conf /usr/share/jenkins/ref
