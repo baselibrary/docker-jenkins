@@ -3,7 +3,7 @@ MAINTAINER ShawnMa <qsma@thoughtworks.com>
 
 ## Version
 ENV JENKINS_MAJOR   2
-ENV JENKINS_VERSION 2.46.3
+ENV JENKINS_VERSION 2.60.1
 
 ## Environments
 ENV JENKINS_HOME             /var/lib/jenkins
